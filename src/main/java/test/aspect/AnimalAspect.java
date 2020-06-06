@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import test.Animal;
 import test.dto.Food;
 
 import java.time.LocalDateTime;
@@ -23,18 +24,14 @@ public class AnimalAspect {
     public void eatPoint() {
     }
 
-    @Pointcut("within(test.Fish)")
-    public void fishPoint() {
-    }
-
     @Before(value = "eatPoint()")
     public void beforeEat() {
-        System.out.println("start eat");
+        System.out.println("beforeEat() start eat");
     }
 
     @After(value = "eatPoint()")
     public void afterEat() {
-        System.out.println("end eat");
+        System.out.println("afterEat() end eat");
     }
 
     @AfterThrowing(value = "eatPoint()", throwing = "ex")
@@ -44,33 +41,29 @@ public class AnimalAspect {
 
     @AfterReturning(value = "eatPoint()")
     public void eatSuccess(JoinPoint joinPoint) {
-        System.out.println("eat success");
+        System.out.println("eatSuccess() eat success");
     }
 
-    @Around(value = "eatPoint() && args(food) && !fishPoint()")
+    @Around(value = "eatPoint() && args(food)")
     public Object eatAround(ProceedingJoinPoint proceedingJoinPoint, Food food) throws Throwable {
-        String target = proceedingJoinPoint.getTarget().getClass().toString();
-        if (LocalDateTime.now().isAfter(food.getExpirationDate())){
+        Animal animal = (Animal) proceedingJoinPoint.getTarget();
+        String target = animal.getClass().toString();
+        if (LocalDateTime.now().isAfter(food.getExpirationDate()) || !isGoodFoodType(animal, food)){
             return false;
         }
-        System.out.println(target + " start eat");
+        System.out.println("eatAround "+target + " start eat");
         try {
             Object result = proceedingJoinPoint.proceed();
-            System.out.println(target + " eat success");
-            System.out.println(target + " end eat");
+            System.out.println("eatAround "+target + " eat success");
+            System.out.println("eatAround "+target + " end eat");
             return result;
         } catch (Throwable e) {
-            System.out.println(target + " eat failed: " + e.getMessage());
+            System.out.println("eatAround "+ target + " eat failed: " + e.getMessage());
             throw e;
         }
     }
 
-    @Around(value = "eatPoint() && args(food) && fishPoint()")
-    public Object validateEatForFish(ProceedingJoinPoint proceedingJoinPoint, Food food) throws Throwable {
-        if (Objects.equals(food.getFoodName(), "fish")) {
-            return false;
-        } else {
-            return eatAround(proceedingJoinPoint, food);
-        }
+    public boolean isGoodFoodType(Animal animal, Food food) {
+        return animal.getPossibleFeedTypes().contains(food.getFoodType());
     }
 }

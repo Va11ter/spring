@@ -25,6 +25,7 @@ public class ZooServiceImpl implements ZooService {
                 .peek(animal -> animal.eat(food))
                 .filter(Animal::isAngry)
                 .collect(Collectors.toList());
-        System.out.println(angryAnimals);
+        System.out.println("Angry_animals: " + angryAnimals.toString());
+
     }
 }

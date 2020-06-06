@@ -9,13 +9,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class Fish implements Animal {
-    private static ArrayList<FoodTypes> feedTypes = new ArrayList<>(
-            Arrays.asList(FoodTypes.WORM, FoodTypes.CUCUMBER));
-    private boolean angry = true;
+public class Bird implements Animal {
+    static final private List<FoodTypes> possibleFeed = new ArrayList<>(
+            Arrays.asList(FoodTypes.BIRD_FOOD, FoodTypes.WORM, FoodTypes.SEED));
+    boolean angry = true;
 
     @Override
     public void voice() {
+        System.out.println("Tweet, tweet");
     }
 
     @Override
@@ -31,7 +32,6 @@ public class Fish implements Animal {
 
     @Override
     public List<FoodTypes> getPossibleFeedTypes() {
-        return new ArrayList<>(feedTypes);
+        return new ArrayList<>(possibleFeed);
     }
-
 }

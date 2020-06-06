@@ -3,12 +3,18 @@ package test;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import test.dto.Food;
+import test.dto.FoodTypes;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE;
 
 @Component
-@Scope(value = SCOPE_PROTOTYPE)
 public class Dog implements Animal {
+    private static ArrayList<FoodTypes> feedTypes = new ArrayList<>(
+            Arrays.asList(FoodTypes.DOG_FOOD, FoodTypes.SAUSAGE));
     private boolean angry = true;
 
     public void voice() {
@@ -23,6 +29,13 @@ public class Dog implements Animal {
 
     @Override
     public boolean isAngry() {
-        return false;
+        return angry;
     }
+
+    @Override
+    public List<FoodTypes> getPossibleFeedTypes() {
+        return new ArrayList<>(feedTypes);
+    }
+
+
 }
