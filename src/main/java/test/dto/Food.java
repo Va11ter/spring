@@ -5,7 +5,12 @@ import java.time.LocalDateTime;
 public class Food {
     private String foodName;
     private LocalDateTime expirationDate;
-    private FoodTypes foodType;
+    private final FoodTypes foodType;
+
+    public Food(FoodTypes foodType){
+        this.foodType = foodType;
+        foodName = foodType.name();
+    }
 
     public String getFoodName() {return foodName;}
 
@@ -22,6 +27,4 @@ public class Food {
     }
 
     public FoodTypes getFoodType(){return foodType;}
-
-    public void setFoodType(FoodTypes foodType) { this.foodType = foodType;}
 }

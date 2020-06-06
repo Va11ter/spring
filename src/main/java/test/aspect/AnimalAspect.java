@@ -49,6 +49,7 @@ public class AnimalAspect {
         Animal animal = (Animal) proceedingJoinPoint.getTarget();
         String target = animal.getClass().toString();
         if (LocalDateTime.now().isAfter(food.getExpirationDate()) || !isGoodFoodType(animal, food)){
+            System.out.println("eatAround food " + food.getFoodName() + " doesn't fit for " + animal.toString());
             return false;
         }
         System.out.println("eatAround "+target + " start eat");
@@ -63,7 +64,7 @@ public class AnimalAspect {
         }
     }
 
-    public boolean isGoodFoodType(Animal animal, Food food) {
+    private boolean isGoodFoodType(Animal animal, Food food) {
         return animal.getPossibleFeedTypes().contains(food.getFoodType());
     }
 }
